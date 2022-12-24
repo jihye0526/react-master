@@ -33,16 +33,24 @@ import {useForm} from "react-hook-form";
 }*/
 
 function TodoList() {
-    const {register, watch} = useForm();
-    console.log(watch())
+    const {register, handleSubmit, formState} = useForm();
+    const onValid = (data:any) => {
+        alert(data)
+    }
+    console.log(formState.errors)
 
     return (
         <div>
-            <form>
-                <input {...register("toDo")} placeholder="Write a to do"/>
-                <input {...register("first")} placeholder="first"/>
-                <input {...register("second")} placeholder="second"/>
-                <input {...register("third")} placeholder="third"/>
+            <form style={{display:"flex", flexDirection:"column"}} onSubmit={handleSubmit(onValid)}>
+                <input {...register("toDo", 
+                    {required:"toDo는 핈수입니다.", 
+                    minLength:{
+                        value:5,
+                        message:"길이는 10 이상이여야 합니다."
+                    }})} placeholder="Write a to do"/>
+                <input {...register("first", {required:"first는 필수입니다."})} placeholder="first"/>
+                <input {...register("second", {required:"second는 필수입니다."})} placeholder="second"/>
+                <input {...register("third", {required:true})} placeholder="third"/>
                 <button>Add</button>
             </form>
         </div>
