@@ -39,14 +39,19 @@ interface IForm {
     username: string;
     password: string;
     password1: string;
+    extraErrors?:string;
 }
 
 function TodoList() {
-    const {register, handleSubmit, formState: {errors}} = useForm<IForm>({ defaultValues: {
-        email:"naver.com"
-    }});
-    const onValid = (data:any) => {
-        alert(data)
+    const {register, handleSubmit, formState: {errors}, setError} = useForm<IForm>({ defaultValues: {
+        email:"@naver.com"
+    }}); 
+    console.log(errors);
+    const onValid = (data:IForm) => {
+        if(data.password !== data.password1){
+            setError("password1", {message:"Password are not the same"}, {shouldFocus:true});
+        }
+        //setError("extraErrors", {message:"Server offline."});
     }
 
     return (
@@ -69,12 +74,17 @@ function TodoList() {
                 />
                 <span>{errors?.firstName?.message}</span>
                 <input
-                {...register("lastName", { required: "write here" })}
+                {...register("lastName", 
+                    { required: "write here", 
+                    validate: {
+                        noNico : (val) => val.includes("nico") ? "No nicos allowed" : true,
+                        noNick : (val) => val.includes("nick") ? "No nicks allowed" : true
+                    } })}
                 placeholder="Last Name"
                 />
                 <span>{errors?.lastName?.message}</span>
                 <input
-                {...register("username", { required: "write here", minLength: 10 })}
+                {...register("username", { required: "write here", minLength: 5 })}
                 placeholder="Username"
                 />
                 <span>{errors?.username?.message}</span>
@@ -91,6 +101,7 @@ function TodoList() {
                 />
                 <span>{errors?.password1?.message}</span>
                 <button>Add</button>
+                <span>{errors?.extraErrors?.message}</span>
             </form>
         </div>
     );
