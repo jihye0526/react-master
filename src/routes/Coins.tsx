@@ -24,6 +24,7 @@ const Coin = styled.li`
     color:${props => props.theme.textColor};
     border-radius:15px;
     margin-bottom: 10px;
+    border: 1px solid white;
     a {
         display:flex;
         align-items:center;
@@ -63,21 +64,11 @@ interface ICoin {
     type: string
 }
 
-function Coins(){
-    /*
-    const [coins, setCoins] = useState<ICoin[]>([]);
-    const [loading, setLoading] = useState(true);
+interface ICoinsProps {
+    toggleDark : () => void;
+}
 
-    useEffect(() => {
-      (async() => {
-        const res = await fetch("https://api.coinpaprika.com/v1/coins");
-        const json = await res.json();
-        setCoins(json.slice(0, 100));
-        setLoading(false);
-      })();
-    }, []) 
-    */
-
+function Coins({toggleDark} : ICoinsProps){
     const { isLoading, data } = useQuery<ICoin[]>("allCoins", fetchCoins);
 
     return (
@@ -87,6 +78,7 @@ function Coins(){
             </Helmet>
             <Header>
                 <Title>코인</Title>
+                <button onClick={toggleDark}>Toggle Mode</button>
             </Header>
             {isLoading ? <Loader>Loading...</Loader> : <CoinsList>
                 {data?.slice(0, 100).map((coin) => (
