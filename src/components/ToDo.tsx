@@ -26,9 +26,8 @@ function ToDo({id, text, category}:IToDo){
     const onClick = (cat:IToDo["category"]) => {
         setToDos((oldToDos) => {
             const targetIdx = oldToDos.findIndex(toDo => toDo.id === id);
-            const oldToDo = oldToDos[targetIdx];
             const newToDo = {text, id, category:cat};
-            return oldToDos;
+            return [...oldToDos.slice(0,targetIdx), newToDo, ...oldToDos.slice(targetIdx+1)];
         });
     }
 
@@ -36,10 +35,8 @@ function ToDo({id, text, category}:IToDo){
         const {currentTarget : {name}} = e;
         setToDos((oldToDos) => {
             const targetIdx = oldToDos.findIndex(toDo => toDo.id === id);
-            const oldToDo = oldToDos[targetIdx];
-            const newToDo = {text, id, category:name};
-            console.log(oldToDo, newToDo)
-            return oldToDos;
+            const newToDo = {text, id, category:name as any};
+            return [...oldToDos.slice(0,targetIdx), newToDo, ...oldToDos.slice(targetIdx+1)];
         });
     }
 
