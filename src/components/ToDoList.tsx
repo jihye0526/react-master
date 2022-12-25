@@ -1,19 +1,29 @@
 import { useRecoilValue } from "recoil";
-import { toDoState } from "../atoms";
+import { toDoSelector, toDoState } from "../atoms";
 import CreateToDo from "./CreateToDo";
 import ToDo from "./ToDo";
 
 function TodoList() {
-    const toDos = useRecoilValue(toDoState);
-    console.log(toDos)
+    const [toDo, doing, done] = useRecoilValue(toDoSelector);
 
     return (
         <div>
             <h1>To Dos</h1>
             <hr/>
-                <CreateToDo/>
+            <CreateToDo/>
+            <h2>To Do</h2>
             <ul>
-                {toDos.map(toDo => ( <ToDo key={toDo.id} {...toDo}/> ))}
+                {toDo.map(toDo => ( <ToDo key={toDo.id} {...toDo}/> ))}
+            </ul>
+            <hr/>
+            <h2>DOING</h2>
+            <ul>
+                {doing.map(toDo => ( <ToDo key={toDo.id} {...toDo}/> ))}
+            </ul>
+            <hr/>
+            <h2>DONE</h2>
+            <ul>
+                {done.map(toDo => ( <ToDo key={toDo.id} {...toDo}/> ))}
             </ul>
         </div>
     );
