@@ -24,12 +24,23 @@ const DoneButton = styled.button`
 function ToDo({id, text, category}:IToDo){
     const setToDos = useSetRecoilState(toDoState);
     const onClick = (cat:IToDo["category"]) => {
-        console.log(cat);
+        setToDos((oldToDos) => {
+            const targetIdx = oldToDos.findIndex(toDo => toDo.id === id);
+            const oldToDo = oldToDos[targetIdx];
+            const newToDo = {text, id, category:cat};
+            return oldToDos;
+        });
     }
 
     const onClick2 = (e:React.MouseEvent<HTMLButtonElement>) => {
         const {currentTarget : {name}} = e;
-        console.log(name);
+        setToDos((oldToDos) => {
+            const targetIdx = oldToDos.findIndex(toDo => toDo.id === id);
+            const oldToDo = oldToDos[targetIdx];
+            const newToDo = {text, id, category:name};
+            console.log(oldToDo, newToDo)
+            return oldToDos;
+        });
     }
 
     return (
