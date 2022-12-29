@@ -11,6 +11,7 @@ const Wrapper = styled.div`
     min-height: 300px;
     display: flex;
     flex-direction:column;
+    overflow: hidden;
 `;
 
 const Title = styled.div`
@@ -24,11 +25,12 @@ const Area = styled.div<IAreaProps>`
     background-color: ${(props) =>
         props.isDraggingOver
         ? "#dfe6e9"
-        : props.draggingFromThisWith
+        : props.isDraggingFromThis
         ? "#b2bec3"
         : "transparent"};
-    flex-grow:1;
-    transition: background-color .3s ease-in-out;
+    flex-grow: 1;
+    transition: background-color 0.3s ease-in-out;
+    padding: 20px;
 `;
 
 interface IBoardProps {
@@ -38,7 +40,7 @@ interface IBoardProps {
 
 interface IAreaProps {
     isDraggingOver : boolean;
-    draggingFromThisWith: boolean;
+    isDraggingFromThis: boolean;
 }
 
 function Board({toDos, boardId} : IBoardProps){
@@ -49,7 +51,7 @@ function Board({toDos, boardId} : IBoardProps){
                 {(provided, snapshot) => (
                     <Area 
                         isDraggingOver={snapshot.isDraggingOver} 
-                        draggingFromThisWith={Boolean(snapshot.draggingFromThisWith)} 
+                        isDraggingFromThis={Boolean(snapshot.draggingFromThisWith)}
                         ref={provided.innerRef} 
                         {...provided.droppableProps}
                     >
