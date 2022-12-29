@@ -1,5 +1,8 @@
 import { Droppable } from "react-beautiful-dnd";
+import { useForm } from "react-hook-form";
+import { useSetRecoilState } from "recoil";
 import styled from "styled-components";
+import { IToDo, toDoState } from "../atoms";
 import DragabbleCard from "./DragabbleCard";
 
 const Wrapper = styled.div`
@@ -33,8 +36,15 @@ const Area = styled.div<IAreaProps>`
     padding: 20px;
 `;
 
+const Form = styled.form`
+    width: 100%;
+    input {
+        width: 100%;
+    }
+`;
+
 interface IBoardProps {
-    toDos : string[];
+    toDos : IToDo[];
     boardId : string;
 }
 
@@ -43,10 +53,37 @@ interface IAreaProps {
     isDraggingFromThis: boolean;
 }
 
+interface IForm {
+    toDo : string;
+}
+
 function Board({toDos, boardId} : IBoardProps){
+    const setToDos = useSetRecoilState(toDoState);
+    const {register, setValue, handleSubmit} = useForm<IForm>();
+    const onValid = ({toDo}:IForm) => {
+        const newToDo = {
+            id:Date.now(),
+            text: toDo
+        };
+        setToDos(allBoards => {
+            return {
+                ...allBoards,
+                [boardId]: [...allBoards[boardId], newToDo]
+            }
+        });
+        setValue("toDo", "");
+    }
+
     return (
         <Wrapper>
             <Title>{boardId}</Title>
+            <Form onSubmit={handleSubmit(onValid)}>
+                <input 
+                    {...register("toDo", {required: true})} 
+                    type="text" 
+                    placeholder={`Add task on ${boardId}`}
+                />
+            </Form>
             <Droppable droppableId={boardId}>
                 {(provided, snapshot) => (
                     <Area 
@@ -56,7 +93,7 @@ function Board({toDos, boardId} : IBoardProps){
                         {...provided.droppableProps}
                     >
                         {toDos.map((toDo, idx) => 
-                            <DragabbleCard key={toDo} toDo={toDo} idx={idx}/>
+                            <DragabbleCard key={toDo.id} toDoId={toDo.id} toDoText={toDo.text} idx={idx}/>
                         )}
                         {provided.placeholder}
                     </Area>
