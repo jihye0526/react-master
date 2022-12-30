@@ -1,4 +1,5 @@
 import { motion } from "framer-motion";
+import { useRef } from "react";
 import styled from "styled-components";
 
 const Wrapper = styled.div`
@@ -7,6 +8,17 @@ const Wrapper = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+`;
+
+const BiggerBox =styled.div`
+  width:600px;
+  height:600px;
+  background-color: rgba(255, 255, 255, 0.4);
+  border-radius: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
 `;
 
 const Box = styled(motion.div)`
@@ -20,19 +32,24 @@ const Box = styled(motion.div)`
 const boxVariants = {
   hover: { scale: 1.5, rotateZ: 90 },
   click: { scale:1, borderRadius: "100px"},
-  drag: { backgroundColor: "rgb(46, 204, 113)", transition: { duration: 5 } }, //"blue"와 같은 값을 넣으면 애니메이션이 발생하지 않음. rgba값을 넣어야 애니메이션 발생
 }
 
 function App() {
+  const biggerBoxRef = useRef<HTMLDivElement>(null);
+
   return (
     <Wrapper>
-      <Box
-        drag
-        variants={boxVariants}
-        whileHover="hover"
-        whileDrag="drag"
-        whileTap="click"
-      />
+      <BiggerBox ref={biggerBoxRef}>
+        <Box
+          drag
+          dragSnapToOrigin
+          dragElastic={0.5} {/* 아이템을 드래그 시 원점에서 움직임을 허용하는 정도 */}
+          dragConstraints={biggerBoxRef}
+          variants={boxVariants}
+          whileHover="hover"
+          whileTap="click"
+        />
+      </BiggerBox>
     </Wrapper>
   );
 }
