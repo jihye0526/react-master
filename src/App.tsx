@@ -43,7 +43,7 @@ function App() {
         <Box
           drag
           dragSnapToOrigin
-          dragElastic={0.5} {/* 아이템을 드래그 시 원점에서 움직임을 허용하는 정도 */}
+          dragElastic={0.5} /* 아이템을 드래그 시 원점에서 움직임을 허용하는 정도 */
           dragConstraints={biggerBoxRef}
           variants={boxVariants}
           whileHover="hover"
