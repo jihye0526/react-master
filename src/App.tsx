@@ -26,43 +26,50 @@ const Box = styled(motion.div)`
 `;
 
 const box = {
-  invisible: {
-    x: 500,
+  entry: (isBack:boolean) => ({
+    x: isBack ? -500 : 500,
     opacity: 0,
     scale: 0,
-  },
-  visible: {
+  }),
+  center: (isBack:boolean) => ({
     x: 0,
     opacity: 1,
     scale: 1,
     transition: {
-      duration: 1,
+      duration: 0.3,
     },
-  },
-  exit: { x: -500, opacity: 0, scale: 0, transition: { duration: 1 } },
+  }),
+  exit: (isBack:boolean) => ({ x: isBack ? 500 : -500, opacity: 0, scale: 0, transition: { duration: 0.3 } })
 };
 
 function App() {
   const [visible, setVisible] = useState(1);
-  const nextPlease = () => setVisible(prev => prev === 10 ? 10: prev + 1);
+  const [back, setBack] = useState(false);
+  const prevPlease = () => {
+    setBack(true);
+    setVisible(prev => prev === 1 ? 1: prev - 1)
+  };
+  const nextPlease = () => {
+    setBack(false);
+    setVisible(prev => prev === 10 ? 10: prev + 1)
+  };
 
   return (
     <Wrapper>
-      <AnimatePresence>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
-          i === visible ? 
-          <Box 
-            key={i}
-            variants={box}
-            initial="invisible"
-            animate="visible"
-            exit="exit"
-          >
-              {i}
-          </Box> : 
-          null
-        ))}
+      {/*<AnimatePresence mode="wait" custom={back}>  moe="wait"을 사용함으로써 exit을 실행시키고 exit이 끝나면 다음 element를 실행 할 수 있게 함 */}
+      <AnimatePresence custom={back}>
+        <Box 
+          custom={back}
+          key={visible}
+          variants={box}
+          initial="entry"
+          animate="center"
+          exit="exit"
+        >
+            {visible}
+        </Box> : 
       </AnimatePresence>
+      <button onClick={prevPlease}>prev</button>
       <button onClick={nextPlease}>next</button>
     </Wrapper>
   );
