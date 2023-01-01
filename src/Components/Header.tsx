@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import { motion } from "framer-motion";
 import { Link, useRouteMatch } from "react-router-dom";
+import { useState } from "react";
 
 const Nav = styled.nav`
   display: flex;
@@ -51,12 +52,15 @@ const Item = styled.li`
 
 const Search = styled.span`
   color: white;
+  display: flex;
+  align-items: center;
+  position: relative;
   svg {
     height: 25px;
   }
 `;
 
-const Circle = styled.span`
+const Circle = styled(motion.span)`
   position: absolute;
   width: 5px;
   height: 5px;
@@ -66,6 +70,12 @@ const Circle = styled.span`
   right: 0;
   margin: 0 auto; /* 무언가를 중앙에 위치하고 싶으면  left: 0, right:0, margin: 0 auto를 주면 됨 */
   background-color: ${props => props.theme.red};
+`;
+
+const Input = styled(motion.input)`
+  transform-origin: right center;
+  position: absolute;
+  left: -180px;
 `;
 
 const logoVariants = {
@@ -81,9 +91,10 @@ const logoVariants = {
 };
 
 function Header(){
-    const homeMatch = useRouteMatch("/");
+    const [searchOpen, setSearchOpen] = useState(false);
+    const homeMatch = useRouteMatch("/"); // '/tv'가 들어와도 '/'를 포함하고 있어서 true를 반환하므로 isExact로 비교해야함
     const tvMatch = useRouteMatch("/tv");
-    console.log(homeMatch, tvMatch);
+    const toggleSearch = () => { setSearchOpen((prev) => !prev); }
 
     return (
         <Nav>
@@ -102,29 +113,37 @@ function Header(){
                 <Items>
                     <Item>
                         <Link to="/">
-                            Home {homeMatch?.isExact && <Circle />}
+                            Home {homeMatch?.isExact && <Circle layoutId="circle"/>}
                         </Link>
                     </Item>
                     <Item>
                         <Link to="/tv">
-                            Tv Shows {tvMatch && <Circle />}
+                            Tv Shows {tvMatch && <Circle layoutId="circle"/>}
                         </Link>
                     </Item>
                 </Items>
             </Col>
             <Col>
                 <Search>
-                <svg
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                    xmlns="http://www.w3.org/2000/svg"
-                >
-                    <path
-                    fillRule="evenodd"
-                    d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                    clipRule="evenodd"
-                    ></path>
-                </svg>
+                    <motion.svg
+                        onClick={toggleSearch}
+                        animate={{ x: searchOpen ? -210 : 0 }}
+                        transition={{ ease: "linear" }}
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                        xmlns="http://www.w3.org/2000/svg"
+                    >
+                        <path
+                        fillRule="evenodd"
+                        d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                        clipRule="evenodd"
+                        ></path>
+                    </motion.svg>
+                    <Input
+                        transition={{ ease: "linear" }}
+                        animate={{ scaleX: searchOpen ? 1 : 0 }}
+                        placeholder="Search for movie or tv show..."
+                    />
                 </Search>
             </Col>
         </Nav>
