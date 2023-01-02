@@ -1,18 +1,7 @@
-const BASE_URL = `https://api.coinpaprika.com/v1`;
-const BASE_URL2 = `https://ohlcv-api.nomadcoders.workers.dev`;
+const API_KEY = "03e63f4a6113b7712273d43c6c0662bf";
+const BASE_PATH = "https://api.themoviedb.org/3";
 
-export function fetchCoins(){
-    return fetch(`${BASE_URL}/coins`).then(res => res.json());
-}
 
-export function fetchCoinInfo(coinId:string){
-    return fetch(`${BASE_URL}/coins/${coinId}`).then(res => res.json());
-}
-
-export function fetchCoinTickers(coinId:string){
-    return fetch(`${BASE_URL}/tickers/${coinId}`).then(res => res.json());
-}
-
-export function fetchCoinHistory(coinId:string){
-    return fetch(`${BASE_URL2}/?coinId=${coinId}`).then(res => res.json());
+export function getMovies(){
+    return fetch(`${BASE_PATH}/movie/now_playing?api_key=${API_KEY}`).then(res => res.json());
 }
